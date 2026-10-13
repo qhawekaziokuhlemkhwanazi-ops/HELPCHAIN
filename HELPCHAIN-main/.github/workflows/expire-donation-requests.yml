@@ -1,0 +1,28 @@
+name: Expire donation requests
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  expire:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Expire due requests
+        env:
+          DONATION_EXPIRY_URL: ${{ vars.DONATION_EXPIRY_URL }}
+          DONATION_EXPIRY_SECRET: ${{ secrets.DONATION_EXPIRY_SECRET }}
+        run: |
+          set -euo pipefail
+          if [ -z "$DONATION_EXPIRY_URL" ] || [ -z "$DONATION_EXPIRY_SECRET" ]; then
+            echo "::error::Set the DONATION_EXPIRY_URL Actions variable and DONATION_EXPIRY_SECRET Actions secret."
+            exit 1
+          fi
+          curl --fail --silent --show-error \
+            --request POST \
+            --header "Authorization: Bearer ${DONATION_EXPIRY_SECRET}" \
+            "$DONATION_EXPIRY_URL"
