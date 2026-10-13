@@ -4,8 +4,8 @@ services:
     runtime: docker
     plan: free
     region: oregon
-    dockerfilePath: ./Dockerfile.api
-    dockerContext: .
+    dockerfilePath: ./HELPCHAIN-main/Dockerfile.api
+    dockerContext: ./HELPCHAIN-main
     healthCheckPath: /api/healthz
     envVars:
       - key: NODE_ENV
